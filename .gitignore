@@ -4,6 +4,5 @@
 *.log*
 .idea/
 migrations/
-manage.py
 *.bak
 
