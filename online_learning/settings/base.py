@@ -26,11 +26,33 @@ SECRET_KEY = 'lfqt1l2yy65srwys&um7eam_))*1#==koq5q+p8+if_-fdi&@k'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+SITE_ID=3
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = (
+        'google.com',
+        'hostname.example.com',
+        'localhost:9000'
+)
+
+CORS_ALLOW_HEADERS = (
+        'x-requested-with',
+        'content-type',
+        'accept',
+        'origin',
+        'authorization',
+        'x-csrftoken'
+)
 
 
 # Application definition
 
 INSTALLED_APPS = (
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,12 +64,15 @@ INSTALLED_APPS = (
     'rest_auth',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'rest_auth.registration',
     'courses',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

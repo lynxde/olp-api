@@ -30,12 +30,12 @@ class CourseSessionSerializer(ModelSerializer):
             return False
 
 
-    def get_chapter_statuses(self, obj):
+    def get_chapter_statuses(self, session):
 
         active_enrollment = None
 
         try:
-            active_enrollment = Enrollment.objects.filter(course_session=obj, user=self.request.user,
+            active_enrollment = Enrollment.objects.filter(course_session=session, user=self.request.user,
                                                           completed=False).latest('id')
         except Exception as e:
             print "No active enrollment..."
@@ -45,7 +45,7 @@ class CourseSessionSerializer(ModelSerializer):
                 'chapter_id',
                 flat=True)
 
-            all_chapters = Chapter.objects.filter(section__in=obj.course.sections.all()).values('id', 'name')
+            all_chapters = Chapter.objects.filter(section__in=session.course.sections.all()).values('id', 'name', 'section__name')
 
             for chapter in all_chapters:
 
@@ -55,6 +55,8 @@ class CourseSessionSerializer(ModelSerializer):
                 else:
                     chapter['completed'] = False
 
+            #chapter['section_name'] = chapter.section.name
+                    
             #all_events = Event.objects.filter(chapter__in=Chapter.objects.filter(section__in=obj.course.sections.all()))
 
             return all_chapters
