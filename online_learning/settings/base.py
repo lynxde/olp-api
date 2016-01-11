@@ -36,7 +36,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
         'google.com',
         'hostname.example.com',
-        'localhost:9000'
+        'localhost:8080'
 )
 
 CORS_ALLOW_HEADERS = (
@@ -83,6 +83,15 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'online_learning.urls'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 
 TEMPLATES = [
     {
@@ -184,7 +193,7 @@ LOGGING = {
             'filters': ['require_debug_true'],
         },
         'null': {
-            "class": 'django.utils.log.NullHandler',
+           "class": 'logging.NullHandler',
         }
     },
     'loggers': {
