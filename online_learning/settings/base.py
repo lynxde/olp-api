@@ -30,13 +30,13 @@ SITE_ID=3
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
         'google.com',
         'hostname.example.com',
-        'localhost:8080'
+        'localhost:8080',
+        'localhost:9000'
 )
 
 CORS_ALLOW_HEADERS = (

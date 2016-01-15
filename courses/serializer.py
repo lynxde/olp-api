@@ -1,13 +1,26 @@
 from rest_framework.serializers import ModelSerializer
-from courses.models import Course, CourseSession, Enrollment, EnrollmentChapter, Chapter, Event
+from courses.models import Course, CourseSession, Enrollment, EnrollmentChapter, Chapter, Event, Section
 from rest_framework import serializers
 
 
+class SectionSerializer(ModelSerializer):
+    chapters = serializers.SerializerMethodField()
+
+    def get_chapters(self, session):
+        return Chapter.objects.filter(section=session).values('id', 'name')
+
+    class Meta:
+        model = Section
+        exclude = ['created', 'modified', 'course']
+
+
 class CourseSerializer(ModelSerializer):
+    sections = SectionSerializer(many=True)
+    
     class Meta:
         model = Course
         exclude = ['created', 'modified']
-
+        
 
 class CourseSessionSerializer(ModelSerializer):
     def __init__(self, *args, **kwargs):
@@ -22,8 +35,8 @@ class CourseSessionSerializer(ModelSerializer):
         exclude = ['created', 'modified', 'users']
 
     def get_active_enrollment(self, obj):
-        active_enrollment = Enrollment.objects.filter(course_session=obj, user=self.request.user,
-                                                      completed=False).exists()
+        active_enrollment = Enrollment.objects.filter(course_session=obj, user=self.request.user, completed=False).exists()
+
         if active_enrollment:
             return True
         else:
@@ -35,8 +48,7 @@ class CourseSessionSerializer(ModelSerializer):
         active_enrollment = None
 
         try:
-            active_enrollment = Enrollment.objects.filter(course_session=session, user=self.request.user,
-                                                          completed=False).latest('id')
+            active_enrollment = Enrollment.objects.filter(course_session=session, user=self.request.user, completed=False).latest('id')
         except Exception as e:
             print "No active enrollment..."
 
